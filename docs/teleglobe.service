@@ -1,0 +1,26 @@
+[Unit]
+Description=TeleGlobe - a way to reach the one you belove the most
+After=systemd-udev-trigger.service network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+TimeoutStopSec=15
+
+KillSignal=SIGINT
+LimitMEMLOCK=infinity
+LimitRTPRIO=infinity
+
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/teleglobe-workdir
+
+Environment="PYTHONPATH=lib:src" 'DBUS_SESSION_BUS_ADDRESS=unix:path=/run/dbus/system_bus_socket'
+
+ExecStart=/home/pi/teleglobe/teleglobe.sh
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=default.target
