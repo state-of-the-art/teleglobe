@@ -25,7 +25,8 @@ Telegram controlled snowglobe bot
      directories:
        - /home/pi/Album
    ```
-2. Run the bot: `./teleglobe.sh`
+2. Install requirements: `sudo apt install omxplayer dnsmasq hostapd unzip tar python3-venv`
+3. Run the bot: `./teleglobe.sh`
 
 ## Configure usb audio
 
@@ -74,3 +75,7 @@ Here we will configure the CM108 small usb audio device: https://learn.adafruit.
 4. Change dir: `cd MZDPI-master/vga`
 5. Install driver: `sudo ./mzdpi-vga-autoinstall-online`
 6. Change screen rotation: `sudo vi /boot/config.txt` replace to `display_rotate=1`
+
+## Enable camera to take photos / videos / face recognition
+
+`sudo raspi-config` -> Interfaces -> Camera -> Yes -> Reboot

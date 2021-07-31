@@ -5,11 +5,10 @@ import signal
 import logging
 import tempfile
 import subprocess
-import zipfile
+import yaml
 
-# Import settings from cwd
-sys.path.append(os.getcwd())
-import settings
+with open("settings.yaml", "r") as fd:
+    settings = yaml.load(fd, yaml.Loader)
 
 from telegram import Update, ForceReply, PhotoSize
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
@@ -35,6 +34,11 @@ logger = logging.getLogger("teleglobe")
 
 def tg_start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""
+
+    if update.message.from_user.username not in settings.get("users", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
     user = update.effective_user
     update.message.reply_markdown_v2(
         fr'Hi {user.mention_markdown_v2()}\!',
@@ -44,16 +48,31 @@ def tg_start(update: Update, context: CallbackContext) -> None:
 
 def tg_help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
+
+    if update.message.from_user.username not in settings.get("users", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
     update.message.reply_text('Help!')
 
 
 def tg_echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
+
+    if update.message.from_user.username not in settings.get("users", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
     update.message.reply_text(update.message.text)
 
 
 def tg_media_photo(update: Update, context: CallbackContext) -> None:
     """Show photo on the display."""
+
+    if update.message.from_user.username not in settings.get("users", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
     if not update.message.photo:
         update.message.reply_text("ERROR: Unable to find photo in the message")
         return
@@ -99,11 +118,19 @@ def tg_media_photo(update: Update, context: CallbackContext) -> None:
 
 def tg_media_video(update: Update, context: CallbackContext) -> None:
     """Show video or play audio."""
-    print(update.message)
+
+    if update.message.from_user.username not in settings.get("users", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
     update.message.reply_text("Ok, playing media file")
 
 def tg_update_archive(update: Update, context: CallbackContext) -> None:
     """Put the update.zip in working dir and allow startup script to update the TeleGlobe"""
+
+    if update.message.from_user.username not in settings.get("admins", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
 
     # TODO: put update.zip into working directory
     if not update.message.document:
@@ -148,7 +175,7 @@ def main() -> None:
 
     # Create the Updater and pass it your bot's token.
     logger.info("Init telegram bot listener")
-    updater = Updater(settings.AUTH_TOKEN)
+    updater = Updater(settings.get("telegram", {}).get("api_token"))
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
