@@ -148,6 +148,36 @@ def tg_update_archive(update: Update, context: CallbackContext) -> None:
 
     os.kill(os.getpid(), signal.SIGINT)
 
+def tg_mixer_on(update: Update, context: CallbackContext) -> None:
+    """Run mixer"""
+
+    if update.message.from_user.username not in settings.get("admins", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
+    GPIO.output(25, GPIO.HIGH)
+    update.message.reply_text("GPIO.output(25, GPIO.HIGH)")
+
+def tg_mixer_off(update: Update, context: CallbackContext) -> None:
+    """Stop mixer"""
+
+    if update.message.from_user.username not in settings.get("admins", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
+    GPIO.output(25, GPIO.LOW)
+    update.message.reply_text("GPIO.output(25, GPIO.LOW)")
+
+def tg_exec_command(update: Update, context: CallbackContext) -> None:
+    """Run command in shell"""
+
+    if update.message.from_user.username not in settings.get("admins", []):
+        update.message.reply_text("ERROR: Access denied")
+        return
+
+    proc = subprocess.run(update.message.text.split(' ', 1)[-1], shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    update.message.reply_text("STDOUT: %s\n\nSTDERR: %s\n\nCODE: %s" % (proc.stdout, proc.stderr, proc.returncode))
+
 
 def checkInternet() -> bool:
     """Make sure internet is here"""
@@ -182,6 +212,9 @@ def main() -> None:
 
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", tg_start))
+    dispatcher.add_handler(CommandHandler("mixer_on", tg_mixer_on))
+    dispatcher.add_handler(CommandHandler("mixer_off", tg_mixer_off))
+    dispatcher.add_handler(CommandHandler("exec_command", tg_exec_command))
     dispatcher.add_handler(CommandHandler("help", tg_help_command))
 
     # on non command i.e message - echo the message on Telegram
