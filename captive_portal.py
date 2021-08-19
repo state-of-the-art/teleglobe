@@ -41,7 +41,7 @@ def wpaNetworksChange(action: bool = True) -> None:
         raise Exception('Unable to get networks list')
     for line in out.splitlines()[1:]:
         data = line.split()
-        if len(data) == 4 and 'DISABLED' if action else b'CURRENT' in data[3]:
+        if len(data) == 4 and ((b'DISABLED' if action else b'CURRENT') in data[3]):
             if _exec_wait(['wpa_cli', '-i', 'wlan0', ('enable_network' if action else 'disable_network'), data[0]]) == False:
                 raise Exception('Unable to %s network %s' % (data, ('enable' if action else 'disable')))
 
@@ -99,19 +99,19 @@ def runCaptivePortal() -> None:
 
         while True:
             if hostapd.poll() != None:
-                log.error('hostapd exited: STDOUT:%s \n\nSTDERR:%s', *hostapd.communicate())
+                logger.error('hostapd exited: STDOUT:%s \n\nSTDERR:%s', *hostapd.communicate())
                 hostapd = None
             if dnsmasq.poll() != None:
-                log.error('dnsmasq exited: STDOUT:%s \n\nSTDERR:%s', dnsmasq.communicate())
+                logger.error('dnsmasq exited: STDOUT:%s \n\nSTDERR:%s', dnsmasq.communicate())
                 dnsmasq = None
             if captive.poll() != None:
-                log.error('captive_portal exited: STDOUT:%s \n\nSTDERR:%s', captive.communicate())
+                logger.error('captive_portal exited: STDOUT:%s \n\nSTDERR:%s', captive.communicate())
                 captive = None
             if hostapd == None and dnsmasq == None and captive == None:
                 raise Exception('All the apps stopped')
             time.sleep(1)
     except (Exception, KeyboardInterrupt) as e:
-        log.error('ERROR: %s', e)
+        logger.error('ERROR: %s', e)
     finally:
         #if captive and captive.poll() == None:
         #    print(_exec(['sudo', 'kill', '-9', str(captive.pid)]).communicate())
@@ -135,8 +135,8 @@ def runCaptivePortal() -> None:
         #if _exec_wait(['sudo', 'ip', 'link', 'set', 'dev', 'wlan0', 'up']) == False:
         #    raise Exception('Unable to startup the wlan0 interface')
 
-        log.warning("REBOOT in 30s")
+        logger.warning("REBOOT in 30s")
         time.sleep(30)
-        log.warning("REBOOT NOW")
+        logger.warning("REBOOT NOW")
         # _exec_wait(["sudo", "reboot"])
 

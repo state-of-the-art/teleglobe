@@ -21,6 +21,8 @@ Telegram controlled snowglobe bot
      - <TELEGRAM_USERNAME>
    admins: # Admin users who can update the bot
      - <TELEGRAM_USERNAME>
+   developer_chat_ids: # Which chats to update on error happened
+     - <TELEGRAM_CHAT_ID>
    slideshow:
      directories:
        - /home/pi/Album

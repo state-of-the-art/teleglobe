@@ -41,6 +41,8 @@ if [ -f "update.zip" ]; then
     else
         # Backup is here, remove update.zip and start as usual
         rm -f update.zip
+        # Delete old backup files and except for 5 latest
+        find -name 'backup-*' | sort -u | head -n -5 | xargs rm -f
         echo "Run the new version of TeleGlobe"
     fi
 fi
