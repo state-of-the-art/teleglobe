@@ -30,7 +30,7 @@ Telegram controlled snowglobe bot
 2. Install requirements: `sudo apt install omxplayer dnsmasq hostapd unzip tar python3-venv`
 3. Run the bot: `./teleglobe.sh`
 
-## Configure usb audio
+### Configure usb audio
 
 Here we will configure the CM108 small usb audio device: https://learn.adafruit.com/usb-audio-cards-with-a-raspberry-pi/cm108-type
 
@@ -56,7 +56,7 @@ Here we will configure the CM108 small usb audio device: https://learn.adafruit.
    $ speaker-test -c 2
    ```
 
-## Setup syncthing
+### Setup syncthing
 
 1. `sudo curl -s -o /usr/share/keyrings/syncthing-archive-keyring.gpg https://syncthing.net/release-key.gpg`
 2. `echo "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable" | sudo tee /etc/apt/sources.list.d/syncthing.list`
@@ -69,7 +69,7 @@ Here we will configure the CM108 small usb audio device: https://learn.adafruit.
 9. Go to IP:8384 and set admin+password and enable https
 10. Now connect the required folders as "receive only"
 
-## Setup MZDPI vga screen
+### Setup MZDPI vga screen
 
 1. Download MZDPI repo: `wget https://github.com/tianyoujian/MZDPI/archive/refs/heads/master.zip`
 2. Rename: `mv master.zip MZDPI.zip`
@@ -78,6 +78,20 @@ Here we will configure the CM108 small usb audio device: https://learn.adafruit.
 5. Install driver: `sudo ./mzdpi-vga-autoinstall-online`
 6. Change screen rotation: `sudo vi /boot/config.txt` replace to `display_rotate=1`
 
-## Enable camera to take photos / videos / face recognition
+### Enable camera to take photos / videos / face recognition
 
 `sudo raspi-config` -> Interfaces -> Camera -> Yes -> Reboot
+
+## OpenSource
+
+This is an experimental project - main goal is to test State Of The Art philosophy on practice.
+
+We would like to see a number of independent developers working on the same project issues
+for the real money (attached to the ticket) or just for fun. So let's see how this will work.
+
+### License
+
+Repository and it's content is covered by `Apache v2.0` - so anyone can use it without any concerns.
+
+If you will have some time - it will be great to see your changes merged to the original repository -
+but it's your choise, no pressure.
